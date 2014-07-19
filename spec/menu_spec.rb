@@ -13,4 +13,11 @@ describe Menu do
   	menu.add(burger)
   	expect(menu.list).to eq [burger]
   end
+
+  it 'can select a dish from the menu' do
+  	burger = double :dish, name: "Burger", price: 5.65
+  	menu.add(burger)
+  	expect(menu.select("Burger")).to eq burger
+  end
+
 end
