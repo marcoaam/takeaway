@@ -13,14 +13,8 @@ describe Takeaway do
   	expect(takeaway.menu.list).to eq [burger, pizza]
   end
 
-  it 'adds the selected dish to the order' do
-  	order = double :order
-  	dish_name = "Burger"
-  	quantity = 2
-  	expect(order).to receive(:add).with(burger, quantity)
-  	expect(menu).to receive(:select).with(dish_name).and_return(burger)
-
-  	takeaway.add_to(order, dish_name, quantity)
+  it 'have a orders container empty when created' do
+    expect(takeaway.orders).to eq []
   end
 
   it 'place order and notifies with sms' do
@@ -40,6 +34,19 @@ describe Takeaway do
   	order = double :order, time: 1130
   	expect(order).to receive(:time).and_return(1230)
   	takeaway.calculate_delivery_time(order)
+  end
+
+  it 'can add orders to the order container' do
+    takeaway.add(order)
+    expect(takeaway.orders).to eq [order]
+  end
+
+  it 'records the order after it was placed successfuly' do
+    customer = double :customer, phone_number: '+447785181622'
+    order = double :order, customer: customer, time: 1208
+    allow(takeaway).to receive(:send_sms).with(order.customer.phone_number, takeaway.text_msg(order))
+    takeaway.place(order)
+    expect(takeaway.orders).to eq [order]
   end
 
 end

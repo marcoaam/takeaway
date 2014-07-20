@@ -3,21 +3,24 @@ require_relative 'send_sms'
 class Takeaway
 
 	attr_reader :menu
+	attr_accessor :orders
 
 	def initialize(menu)
 		@menu = menu
-	end
-
-	def add_to(order, dish_name, quantity)
-		order.add(menu.select(dish_name), quantity)
+		@orders ||= []
 	end
 
 	def place(order)
+		add(order)
 		send_sms(order.customer.phone_number, text_msg(order))		
 	end
 
+	def add(order)
+		orders << order
+	end
+
 	def text_msg(order)
-		"Thank you for your order, it will be delivered at #{calculate_delivery_time(order)}"
+		"Thank you! Your order was placed and will be delivered before #{calculate_delivery_time(order)}"
 	end
 
 	def calculate_delivery_time(order)

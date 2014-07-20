@@ -1,0 +1,5 @@
+require_relative 'customer'
+require_relative 'order'
+require_relative 'dish'
+require_relative 'takeaway'
+require_relative 'menu'
